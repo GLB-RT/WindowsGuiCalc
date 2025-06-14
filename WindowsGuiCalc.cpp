@@ -1,4 +1,4 @@
-// WindowsProject2.cpp : Definiuje punkt wejścia dla aplikacji.
+// WindowsProject2.cpp : Defines the entry point for the application.
 //
 
 #include "framework.h"
@@ -8,135 +8,144 @@
 #define ID_PRZYCISK1 501
 #define ID_PRZYCISK2 502
 #define ID_PRZYCISK3 503
-#define ID_PRZYCISK4 503
-#define ID_PRZYCISK5 503
-#define ID_PRZYCISK6 503
-#define ID_PRZYCISK7 503
-#define ID_PRZYCISK8 503
-#define ID_PRZYCISK9 503
+#define ID_PRZYCISK4 504
+#define ID_PRZYCISK5 505
+#define ID_PRZYCISK6 506
+#define ID_PRZYCISK7 507
+#define ID_PRZYCISK8 508
+#define ID_PRZYCISK9 509
+#define ID_PRZYCISKPLUS 510
+#define ID_PRZYCISKDIVIDE 511
+#define ID_PRZYCISKMULTI 512
+#define ID_PRZYCISKEQUAL 513
 
+// Global variables:
+HINSTANCE hInst;                                // Current application instance
+WCHAR szTitle[100];                             // Window title text
+WCHAR szWindowClass[MAX_LOADSTRING];            // Main window class name
 
-// Zmienne globalne:
-HINSTANCE hInst;                                // Bieżąca instancja aplikacji
-WCHAR szTitle[100];                  // Tekst paska tytułu okna
-WCHAR szWindowClass[MAX_LOADSTRING];            // Nazwa klasy głównego okna
-
-// Deklaracje funkcji używanych w tym module kodu:
+// Function declarations used in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-HWND g_hPrzycisk1; // Globalny uchwyt do przycisku
-HWND g_hPrzycisk2; // Globalny uchwyt do przycisku
-HWND g_hPrzycisk3; // Globalny uchwyt do przycisku
-HWND g_hPrzycisk4; // Globalny uchwyt do przycisku
-HWND g_hPrzycisk5; // Globalny uchwyt do przycisku
-HWND g_hPrzycisk6; // Globalny uchwyt do przycisku
-HWND g_hPrzycisk7; // Globalny uchwyt do przycisku
-HWND g_hPrzycisk8; // Globalny uchwyt do przycisku
-HWND g_hPrzycisk9; // Globalny uchwyt do przycisku
+HWND g_hPrzycisk1; // Global handle to button
+HWND g_hPrzycisk2; // Global handle to button
+HWND g_hPrzycisk3; // Global handle to button
+HWND g_hPrzycisk4; // Global handle to button
+HWND g_hPrzycisk5; // Global handle to button
+HWND g_hPrzycisk6; // Global handle to button
+HWND g_hPrzycisk7; // Global handle to button
+HWND g_hPrzycisk8; // Global handle to button
+HWND g_hPrzycisk9; // Global handle to button
+HWND g_hPrzyciskPlus; // Global handle to button
+HWND g_hPrzyciskMinus; // Global handle to button
+HWND g_hPrzyciskDivide; // Global handle to button
+HWND g_hPrzyciskMulti; // Global handle to button
+HWND g_hPrzyciskEqual; // Global handle to button
+HWND g_hLabel; // Handle to label (calculator display)
 
-
-// Główna funkcja aplikacji WinMain (punkt wejścia)
+// Main application function WinMain (entry point)
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance); // Nie używana zmienna
-    UNREFERENCED_PARAMETER(lpCmdLine);     // Nie używana zmienna
+    UNREFERENCED_PARAMETER(hPrevInstance); // Unused variable
+    UNREFERENCED_PARAMETER(lpCmdLine);     // Unused variable
 
-    // TODO: Umieść tutaj kod aplikacji.
+    // TODO: Place application code here.
 
-    // Inicjalizacja globalnych łańcuchów znaków
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING); // Załaduj tytuł aplikacji
-    LoadStringW(hInstance, IDC_WINDOWSGUICALC, szWindowClass, MAX_LOADSTRING); // Załaduj nazwę klasy okna
-    MyRegisterClass(hInstance); // Zarejestruj klasę okna
+    // Initialize global string variables
+    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING); // Load application title
+    LoadStringW(hInstance, IDC_WINDOWSGUICALC, szWindowClass, MAX_LOADSTRING); // Load window class name
+    MyRegisterClass(hInstance); // Register window class
 
-    // Inicjalizacja aplikacji:
-    if (!InitInstance (hInstance, nCmdShow))
+    // Application initialization:
+    if (!InitInstance(hInstance, nCmdShow))
     {
-        return FALSE; // Zakończ, jeśli nie udało się zainicjować instancji
+        return FALSE; // Exit if instance initialization failed
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINDOWSGUICALC)); // Załaduj akceleratory (skróty klawiszowe)
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_WINDOWSGUICALC)); // Load accelerators (keyboard shortcuts)
 
-    MSG msg; // Struktura wiadomości
+    MSG msg; // Message structure
 
-    // Główna pętla komunikatów:
+    // Main message loop:
     while (GetMessage(&msg, nullptr, 0, 0))
     {
-        // Jeśli komunikat nie został obsłużony przez akceleratory, przekaż go dalej
+        // If the message was not handled by accelerators, pass it on
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
-            TranslateMessage(&msg); // Przetłumacz komunikat
-            DispatchMessage(&msg);  // Wyślij komunikat do odpowiedniej procedury okna
+            TranslateMessage(&msg); // Translate message
+            DispatchMessage(&msg);  // Send message to the appropriate window procedure
         }
     }
 
-    return (int) msg.wParam; // Zwróć kod zakończenia aplikacji
+    return (int)msg.wParam; // Return application exit code
 }
 
 //
-//  FUNKCJA: MyRegisterClass()
+//  FUNCTION: MyRegisterClass()
 //
-//  CEL: Rejestruje klasę okna.
+//  PURPOSE: Registers the window class.
 //
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
 
-    wcex.cbSize = sizeof(WNDCLASSEX); // Rozmiar struktury
+    wcex.cbSize = sizeof(WNDCLASSEX); // Structure size
 
-    wcex.style          = CS_HREDRAW | CS_VREDRAW; // Styl klasy okna (przerysowanie przy zmianie rozmiaru)
-    wcex.lpfnWndProc    = WndProc;                 // Wskaźnik do procedury obsługi okna
-    wcex.cbClsExtra     = 0;                       // Dodatkowa ilość bajtów dla klasy
-    wcex.cbWndExtra     = 0;                       // Dodatkowa ilość bajtów dla okna
-    wcex.hInstance      = hInstance;               // Uchwyt instancji aplikacji
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOWSGUICALC)); // Ikona aplikacji
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW); // Kursor myszy
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);       // Kolor tła okna
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_WINDOWSGUICALC); // Nazwa menu
-    wcex.lpszClassName  = szWindowClass;                   // Nazwa klasy okna
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL)); // Mała ikona
+    wcex.style = CS_HREDRAW | CS_VREDRAW; // Window class style (redraw on resize)
+    wcex.lpfnWndProc = WndProc;                 // Pointer to window procedure
+    wcex.cbClsExtra = 0;                       // Extra bytes for class
+    wcex.cbWndExtra = 0;                       // Extra bytes for window
+    wcex.hInstance = hInstance;               // Application instance handle
+    wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_WINDOWSGUICALC)); // Application icon
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW); // Mouse cursor
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);       // Window background color
+    wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_WINDOWSGUICALC); // Menu name
+    wcex.lpszClassName = szWindowClass;                   // Window class name
+    wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL)); // Small icon
 
-    return RegisterClassExW(&wcex); // Zarejestruj klasę okna
+    return RegisterClassExW(&wcex); // Register window class
 }
 
 //
-//   FUNKCJA: InitInstance(HINSTANCE, int)
+//   FUNCTION: InitInstance(HINSTANCE, int)
 //
-//   CEL: Zapisuje uchwyt instancji i tworzy główne okno
+//   PURPOSE: Saves the instance handle and creates the main window
 //
-//   UWAGI:
-//        W tej funkcji zapisujemy uchwyt instancji w zmiennej globalnej i
-//        tworzymy oraz wyświetlamy główne okno programu.
+//   NOTES:
+//        In this function, we save the instance handle in a global variable and
+//        create and display the main program window.
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-    hInst = hInstance; // Zapisz uchwyt instancji w zmiennej globalnej
+    hInst = hInstance; // Save instance handle in global variable
 
-    // Ustal wymiary okna
-    int szerokosc = 720;
-    int wysokosc = 720;
+    // Set window dimensions
+    int width = 550;
+    int height = 370;
 
-    // Utwórz główne okno aplikacji
+    // Create the main application window
     HWND hWnd = CreateWindowW(
         szWindowClass,
         szTitle,
-        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, // stały rozmiar, brak możliwości zmiany
+        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, // fixed size, not resizable
         CW_USEDEFAULT, CW_USEDEFAULT,
-        szerokosc, wysokosc,
+        width, height,
         nullptr, nullptr,
         hInstance, nullptr);
 
     if (!hWnd)
     {
-        return FALSE; // Zwróć FALSE, jeśli nie udało się utworzyć okna
+        return FALSE; // Return FALSE if window creation failed
     }
 
-    ShowWindow(hWnd, nCmdShow); // Pokaż okno
-    UpdateWindow(hWnd);         // Odśwież okno
+    ShowWindow(hWnd, nCmdShow); // Show window
+    UpdateWindow(hWnd);         // Refresh window
+    SetMenu(hWnd, NULL); // Remove menu
 
     g_hPrzycisk1 = CreateWindowEx(
         0,
@@ -255,17 +264,94 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
         NULL
     );
 
-    return TRUE; // Zwróć TRUE, jeśli wszystko się powiodło
+    g_hPrzyciskPlus = CreateWindowEx(
+        0,
+        L"BUTTON",
+        L"+",
+        WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+        230, 50,
+        50, 50,
+        hWnd,
+        (HMENU)ID_PRZYCISK2,
+        hInstance,
+        NULL
+    );
+
+    g_hPrzyciskMinus = CreateWindowEx(
+        0,
+        L"BUTTON",
+        L"-",
+        WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+        230, 110,
+        50, 50,
+        hWnd,
+        (HMENU)ID_PRZYCISK2,
+        hInstance,
+        NULL
+    );
+
+    g_hPrzyciskDivide = CreateWindowEx(
+        0,
+        L"BUTTON",
+        L"/",
+        WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+        230, 170,
+        50, 50,
+        hWnd,
+        (HMENU)ID_PRZYCISK2,
+        hInstance,
+        NULL
+    );
+
+    g_hPrzyciskMulti = CreateWindowEx(
+        0,
+        L"BUTTON",
+        L"*",
+        WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+        230, 230,
+        50, 50,
+        hWnd,
+        (HMENU)ID_PRZYCISK2,
+        hInstance,
+        NULL
+    );
+
+    g_hPrzyciskEqual = CreateWindowEx(
+        0,
+        L"BUTTON",
+        L"=",
+        WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
+        50, 230,
+        170, 50,
+        hWnd,
+        (HMENU)ID_PRZYCISK2,
+        hInstance,
+        NULL
+    );
+
+    g_hLabel = CreateWindowW(
+        L"STATIC",
+        L"0", // Initial text
+        WS_CHILD | WS_VISIBLE | SS_RIGHT | WS_BORDER,
+        300, 50,
+        200, 50,
+        hWnd,
+        (HMENU)1001,
+        hInstance,
+        NULL
+    );
+
+    return TRUE; // Return TRUE if everything succeeded
 }
 
 //
-//  FUNKCJA: WndProc(HWND, UINT, WPARAM, LPARAM)
+//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
-//  CEL: Przetwarza komunikaty dla głównego okna.
+//  PURPOSE: Processes messages for the main window.
 //
-//  WM_COMMAND  - obsługa menu aplikacji
-//  WM_PAINT    - rysowanie głównego okna
-//  WM_DESTROY  - wysłanie komunikatu o zakończeniu aplikacji
+//  WM_COMMAND  - handle application menu
+//  WM_PAINT    - paint the main window
+//  WM_DESTROY  - post a quit message
 //
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -273,58 +359,58 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_COMMAND:
+    {
+        int wmId = LOWORD(wParam); // Get command identifier from menu
+        // Handle menu selections:
+        switch (wmId)
         {
-            int wmId = LOWORD(wParam); // Pobierz identyfikator polecenia z menu
-            // Obsługa wyborów menu:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About); // Wyświetl okno "O programie"
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd); // Zamknij główne okno
-                break;
-            case ID_PRZYCISK1:
-                MessageBox(hWnd, L"Nacisnąłeś przycisk!", L"Informacja", MB_OK | MB_ICONINFORMATION);
-                break;
-            case ID_PRZYCISK2:
-                MessageBox(hWnd, L"Nacisnąłeś przycisk numer 2!", L"Informacja", MB_OK | MB_ICONINFORMATION);
-                break;
+        case IDM_ABOUT:
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About); // Show "About" dialog
+            break;
+        case IDM_EXIT:
+            DestroyWindow(hWnd); // Close main window
+            break;
+        case ID_PRZYCISK1:
+            MessageBox(hWnd, L"You pressed the button!", L"Information", MB_OK | MB_ICONINFORMATION);
+            break;
+        case ID_PRZYCISK2:
+            MessageBox(hWnd, L"You pressed button number 2!", L"Information", MB_OK | MB_ICONINFORMATION);
+            break;
 
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam); // Domyślna obsługa
-            }
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam); // Default handling
         }
-        break;
+    }
+    break;
     case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps); // Rozpocznij rysowanie
-            // TODO: Dodaj tutaj kod rysujący wykorzystujący hdc...
-            EndPaint(hWnd, &ps); // Zakończ rysowanie
-        }
-        break;
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps); // Begin painting
+        // TODO: Add drawing code here using hdc...
+        EndPaint(hWnd, &ps); // End painting
+    }
+    break;
     case WM_DESTROY:
-        PostQuitMessage(0); // Wyślij komunikat o zakończeniu aplikacji
+        PostQuitMessage(0); // Post quit message
         break;
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam); // Domyślna obsługa pozostałych komunikatów
+        return DefWindowProc(hWnd, message, wParam, lParam); // Default handling for other messages
     }
 
     return 0;
 }
 
-// Procedura obsługi okna dialogowego "O programie"
+// "About" dialog window procedure
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    UNREFERENCED_PARAMETER(lParam); // Nie używana zmienna
+    UNREFERENCED_PARAMETER(lParam); // Unused variable
     switch (message)
     {
     case WM_INITDIALOG:
-        return (INT_PTR)TRUE; // Inicjalizacja okna dialogowego
+        return (INT_PTR)TRUE; // Dialog initialization
 
     case WM_COMMAND:
-        // Zamknij okno dialogowe po kliknięciu OK lub Anuluj
+        // Close dialog on OK or Cancel
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
         {
             EndDialog(hDlg, LOWORD(wParam));
@@ -332,5 +418,5 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
-    return (INT_PTR)FALSE; // Domyślna obsługa
+    return (INT_PTR)FALSE; // Default handling
 }
